@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitGallery // Premium Developer Portfolio</title>
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS local copy -->
+    <script src="./assets/tailwind.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -42,12 +42,9 @@
             }
         }
     </script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Local fonts and icons -->
+    <link rel="stylesheet" href="./assets/fontawesome.css">
+    <link rel="stylesheet" href="./assets/fonts.css">
     
     <style>
         /* ตกแต่ง Scrollbar ให้ดูโมเดิร์น */
@@ -138,7 +135,7 @@
                 <div class="relative group">
                     <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-cyan-500 to-violet-600 opacity-60 group-hover:opacity-100 transition duration-500 blur-sm"></div>
                     <div class="relative w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
-                        <img id="profile-avatar" src="https://placehold.co/150x150/111726/ffffff?text=GitHub" alt="GitHub Profile" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <img id="profile-avatar" src="./assets/placeholder.svg" alt="GitHub Profile" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     </div>
                 </div>
 
@@ -609,6 +606,118 @@
             fetchAndRenderPortfolio();
         }
 
+        // Load local card data from text or markdown file when available
+        async function loadLocalCardData() {
+            const candidateFiles = ['./assets/cards/projects.md', './assets/cards/projects.txt'];
+            for (const filePath of candidateFiles) {
+                try {
+                    const response = await fetch(filePath);
+                    if (!response.ok) continue;
+                    const raw = await response.text();
+                    const cards = parseLocalCardData(raw);
+                    if (cards.length) {
+                        return cards;
+                    }
+                } catch (err) {
+                    // Ignore and try next source
+                }
+            }
+            return null;
+        }
+
+        function parseLocalCardData(rawText) {
+            const sections = rawText.split(/\r?\n-{3,}\r?\n/).map(s => s.trim()).filter(Boolean);
+            return sections.map(section => {
+                const lines = section.split(/\r?\n/);
+                const card = {};
+                let currentKey = null;
+                let currentValue = '';
+
+                lines.forEach(line => {
+                    const keyMatch = line.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);
+                    if (keyMatch) {
+                        if (currentKey) {
+                            card[currentKey] = currentValue.trim();
+                        }
+                        currentKey = keyMatch[1];
+                        currentValue = keyMatch[2] || '';
+                    } else if (currentKey) {
+                        currentValue += `\n${line.trim()}`;
+                    }
+                });
+
+                if (currentKey) {
+                    card[currentKey] = currentValue.trim();
+                }
+
+                card.name = card.name || 'Unnamed Project';
+                card.description = card.description || 'ไม่มีคำอธิบายสำหรับโครงการนี้';
+                card.language = card.language || 'Unknown';
+                card.html_url = card.html_url || '#';
+                card.license = null;
+                card.default_branch = 'main';
+                card.created_at = new Date().toISOString();
+                card.updated_at = card.created_at;
+                card.fork = false;
+                card.stargazers_count = 0;
+                card.forks_count = 0;
+                card.watchers_count = 0;
+                card.size = 0;
+
+                return card;
+            });
+        }
+
+        async function enrichLocalCardData(repos) {
+            const githubRepoPromises = repos.map(async repo => {
+                if (!repo.html_url || !repo.html_url.includes('github.com')) {
+                    return repo;
+                }
+
+                const match = repo.html_url.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/|$)/i);
+                if (!match) {
+                    return repo;
+                }
+
+                const owner = match[1];
+                const name = match[2];
+                const apiUrl = `https://api.github.com/repos/${owner}/${name}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        headers: {
+                            Accept: 'application/vnd.github+json',
+                            'User-Agent': 'GitGallery-Local-Repo-Enricher'
+                        }
+                    });
+                    if (!response.ok) {
+                        return repo;
+                    }
+
+                    const data = await response.json();
+                    return {
+                        ...repo,
+                        description: data.description || repo.description,
+                        language: data.language || repo.language,
+                        stargazers_count: data.stargazers_count ?? repo.stargazers_count,
+                        forks_count: data.forks_count ?? repo.forks_count,
+                        watchers_count: data.watchers_count ?? repo.watchers_count,
+                        size: data.size ?? repo.size,
+                        license: data.license || repo.license,
+                        default_branch: data.default_branch || repo.default_branch,
+                        created_at: data.created_at || repo.created_at,
+                        updated_at: data.updated_at || repo.updated_at,
+                        html_url: data.html_url || repo.html_url
+                    };
+                } catch (err) {
+                    return repo;
+                }
+            });
+
+            const settled = await Promise.allSettled(githubRepoPromises);
+            return settled.map(result => (result.status === 'fulfilled' ? result.value : null)).filter(Boolean);
+        }
+
         // Core Fetch function retrieving both profile and repository packages
         async function fetchAndRenderPortfolio() {
             showLoader(true);
@@ -621,6 +730,33 @@
             isSpeaking = false;
             
             try {
+                const localCards = await loadLocalCardData();
+                if (localCards) {
+                    const enrichedRepos = await enrichLocalCardData(localCards);
+
+                    userProfileData = {
+                        avatar_url: './assets/placeholder.svg',
+                        login: 'local-portfolio',
+                        name: 'Local Portfolio',
+                        bio: 'ข้อมูลการ์ดและรายละเอียดถูกดึงจากไฟล์ในเครื่อง',
+                        location: 'Local File',
+                        blog: '#',
+                        html_url: '#',
+                        followers: 0,
+                        public_repos: enrichedRepos.length,
+                        created_at: new Date().toISOString()
+                    };
+
+                    originalRepositories = enrichedRepos;
+                    renderUserProfile();
+                    calculateAndRenderLanguageAnalytics();
+                    generateLanguageFilterButtons();
+                    handleFilterAndSort();
+
+                    triggerNotification('โหลดการ์ดจากไฟล์ในเครื่องเรียบร้อยแล้ว! (ข้อมูลถูกเติมจาก GitHub เมื่อออนไลน์)');
+                    return;
+                }
+
                 // Fetch basic developer profile information
                 const userRes = await fetch(`https://api.github.com/users/${currentUsername}`);
                 
@@ -662,7 +798,7 @@
 
         // Render upper user header components
         function renderUserProfile() {
-            document.getElementById('profile-avatar').src = userProfileData.avatar_url || 'https://via.placeholder.com/150';
+            document.getElementById('profile-avatar').src = userProfileData.avatar_url || './assets/placeholder.svg';
             document.getElementById('profile-name').textContent = userProfileData.name || userProfileData.login;
             document.getElementById('profile-login').textContent = `@${userProfileData.login}`;
             document.getElementById('profile-bio').textContent = userProfileData.bio || 'This GitHub developer has configured no specific profile biography details yet.';
@@ -677,12 +813,13 @@
             }
 
             // External url link setup
-            const webLink = userProfileData.blog || userProfileData.html_url;
+            const webLink = userProfileData.blog || userProfileData.html_url || '';
             const linkWrap = document.getElementById('profile-link-wrap');
             const urlEl = document.getElementById('profile-url');
-            if (webLink) {
+
+            if (webLink && webLink !== '#' && webLink !== 'null') {
                 urlEl.href = webLink.startsWith('http') ? webLink : `https://${webLink}`;
-                urlEl.textContent = userProfileData.blog ? userProfileData.blog : 'github.com';
+                urlEl.textContent = userProfileData.blog ? userProfileData.blog : webLink.replace(/^https?:\/\//, '');
                 linkWrap.classList.remove('hidden');
             } else {
                 linkWrap.classList.add('hidden');
@@ -1448,6 +1585,15 @@ Ensure it sounds professional, energetic, and tech-savvy. Do not use generic fil
             html = html.replace(/^[-\*]\s+(.*?)$/gm, '<li class="ml-4 list-disc text-slate-300">$1</li>');
 
             return html;
+        }
+
+        // Register service worker for offline caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => {
+                    console.warn('Service worker registration failed:', err);
+                });
+            });
         }
     </script>
 </body>

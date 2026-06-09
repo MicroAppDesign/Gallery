@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" role="img" aria-label="Offline Placeholder">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#111726" />
+      <stop offset="100%" stop-color="#060913" />
+    </radialGradient>
+  </defs>
+  <rect width="150" height="150" rx="24" fill="url(#bg)" />
+  <rect x="16" y="16" width="118" height="118" rx="20" fill="#121b31" opacity="0.85" />
+  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#dbeafe" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">GitHub</text>
+  <text x="50%" y="76%" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-size="10">Offline Mode</text>
+</svg>
