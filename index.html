@@ -488,7 +488,7 @@
 
     <script>
         // Core states of Application
-        let currentUsername = 'kennethreitz'; // Default template profile representation (Great Python portfolio)
+        const currentUsername = 'MicroAppDesign'; // Locked GitHub profile display
         let userProfileData = {};
         let originalRepositories = [];
         let filteredRepositories = [];
@@ -530,18 +530,13 @@
 
         // Initialize and check LocalStorage
         window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('git_portfolio_username');
-            if (savedUser) {
-                currentUsername = savedUser;
-            } else {
-                // If it's a fresh load, expand settings automatically to greet user
-                toggleConfigDrawer(true);
-            }
             usernameInput.value = currentUsername;
+            usernameInput.disabled = true;
+            document.getElementById('save-username-btn').disabled = true;
+            document.getElementById('save-username-btn').textContent = 'Locked to MicroAppDesign';
             
             // Build event listeners
             document.getElementById('toggle-config-btn').addEventListener('click', () => toggleConfigDrawer());
-            document.getElementById('save-username-btn').addEventListener('click', saveAndRefreshUser);
             document.getElementById('repo-search').addEventListener('input', handleFilterAndSort);
             document.getElementById('repo-sort').addEventListener('change', handleFilterAndSort);
             
@@ -589,20 +584,12 @@
 
         // Quick set recommended accounts
         function setSampleUser(name) {
-            usernameInput.value = name;
-            saveAndRefreshUser();
+            triggerNotification('บัญชีถูกล็อกไว้ที่ MicroAppDesign แล้ว ไม่สามารถเปลี่ยนผู้ใช้ได้', 'info');
         }
 
         // Update username configuration
         function saveAndRefreshUser() {
-            const val = usernameInput.value.trim();
-            if (!val) {
-                triggerNotification('กรุณากรอก Username ที่มีตัวตนอยู่จริง', 'error');
-                return;
-            }
-            currentUsername = val;
-            localStorage.setItem('git_portfolio_username', val);
-            toggleConfigDrawer(false);
+            triggerNotification('บัญชีถูกล็อกไว้ที่ MicroAppDesign แล้ว ไม่สามารถเปลี่ยนผู้ใช้ได้', 'info');
             fetchAndRenderPortfolio();
         }
 
