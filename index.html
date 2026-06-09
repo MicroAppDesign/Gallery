@@ -718,6 +718,17 @@
             return settled.map(result => (result.status === 'fulfilled' ? result.value : null)).filter(Boolean);
         }
 
+        function extractGithubOwnerFromCards(repos) {
+            for (const repo of repos) {
+                if (!repo.html_url || !repo.html_url.includes('github.com')) continue;
+                const match = repo.html_url.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/|$)/i);
+                if (match) {
+                    return match[1];
+                }
+            }
+            return null;
+        }
+
         // Core Fetch function retrieving both profile and repository packages
         async function fetchAndRenderPortfolio() {
             showLoader(true);
@@ -733,8 +744,8 @@
                 const localCards = await loadLocalCardData();
                 if (localCards) {
                     const enrichedRepos = await enrichLocalCardData(localCards);
-
-                    userProfileData = {
+                    const owner = extractGithubOwnerFromCards(enrichedRepos);
+                    let profileData = {
                         avatar_url: './assets/placeholder.svg',
                         login: 'local-portfolio',
                         name: 'Local Portfolio',
@@ -747,13 +758,42 @@
                         created_at: new Date().toISOString()
                     };
 
+                    if (owner) {
+                        try {
+                            const profileRes = await fetch(`https://api.github.com/users/${owner}`, {
+                                headers: {
+                                    Accept: 'application/vnd.github+json',
+                                    'User-Agent': 'GitGallery-Local-Profile'
+                                }
+                            });
+                            if (profileRes.ok) {
+                                const profileJson = await profileRes.json();
+                                profileData = {
+                                    avatar_url: profileJson.avatar_url || profileData.avatar_url,
+                                    login: profileJson.login || profileData.login,
+                                    name: profileJson.name || profileJson.login || profileData.name,
+                                    bio: profileJson.bio || profileData.bio,
+                                    location: profileJson.location || profileData.location,
+                                    blog: profileJson.blog || profileJson.html_url || profileData.blog,
+                                    html_url: profileJson.html_url || profileData.html_url,
+                                    followers: profileJson.followers ?? profileData.followers,
+                                    public_repos: profileJson.public_repos ?? profileData.public_repos,
+                                    created_at: profileJson.created_at || profileData.created_at
+                                };
+                            }
+                        } catch (err) {
+                            console.warn('Failed to fetch profile for owner', owner, err);
+                        }
+                    }
+
+                    userProfileData = profileData;
                     originalRepositories = enrichedRepos;
                     renderUserProfile();
                     calculateAndRenderLanguageAnalytics();
                     generateLanguageFilterButtons();
                     handleFilterAndSort();
 
-                    triggerNotification('โหลดการ์ดจากไฟล์ในเครื่องเรียบร้อยแล้ว! (ข้อมูลถูกเติมจาก GitHub เมื่อออนไลน์)');
+                    triggerNotification('โหลดการ์ดจากไฟล์ในเครื่องเรียบร้อยแล้ว! (ข้อมูลโปรไฟล์จาก GitHub ถูกเติมโดยอัตโนมัติ)');
                     return;
                 }
 
