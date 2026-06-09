@@ -2,3 +2,5 @@ node_modules/
 styles/
 .DS_Store
 *.log
+
+*.py
