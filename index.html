@@ -69,7 +69,6 @@
 </head>
 <body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col antialiased">
 
-    <!-- Navigation Bar -->
     <header class="sticky top-0 z-40 bg-brand-dark/80 backdrop-blur-xl border-b border-slate-800/60 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <!-- Brand Logo -->
@@ -92,7 +91,6 @@
         </div>
     </header>
 
-    <!-- Config Drawer / Modal -->
     <section id="config-drawer" class="bg-gradient-to-b from-slate-900 to-brand-dark border-b border-slate-800/80 transition-all duration-500 max-h-0 overflow-hidden">
         <div class="max-w-4xl mx-auto px-4 py-8">
             <div class="bg-brand-card/70 border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
@@ -130,7 +128,6 @@
     <!-- Main Content Area -->
     <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
 
-        <!-- Profile Header Section -->
         <section class="relative mb-12 overflow-hidden rounded-3xl border border-slate-800/85 bg-gradient-to-br from-brand-card/60 via-brand-card to-slate-950/80 p-6 sm:p-8 md:p-10 shadow-2xl">
             <!-- Neon ambient background glows -->
             <div class="absolute -top-12 -left-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -204,7 +201,6 @@
             </div>
         </section>
 
-        <!-- Insights Analytics Panel -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
             <!-- Top Languages Box -->
             <div class="lg:col-span-2 bg-brand-card/40 border border-slate-800/80 rounded-2xl p-5 md:p-6 flex flex-col justify-between">
@@ -306,7 +302,6 @@
             </div>
         </section>
 
-        <!-- Search, Filter & Gallery Settings Header -->
         <section class="mb-8">
             <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
                 <!-- Navigation Tab title -->
@@ -494,7 +489,6 @@
         </div>
     </footer>
 
-    <!-- JavaScript Execution Scripts -->
     <script>
         // Core states of Application
         let currentUsername = 'kennethreitz'; // Default template profile representation (Great Python portfolio)
@@ -801,67 +795,51 @@
             handleFilterAndSort();
         }
 
-        // Helper function: Generate a gorgeous custom SVG language placeholder cover banner
+        // Helper function: Generate a gorgeous custom SVG language placeholder cover banner (Fixed distorted images reference image_2757e2.png)
         function getLanguageBanner(language) {
             const normalized = language ? language.toLowerCase() : 'other';
             
-            // Python Banner
+            // Python Banner (Robust scale-independent SVG paths)
             if (normalized === 'python') {
                 return `
                     <div class="relative w-full h-32 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-blue-950/40 flex items-center justify-center overflow-hidden">
                         <!-- Tech background details -->
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3071a9_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <!-- Beautiful high quality glowing Python SVG -->
-                        <svg class="w-16 h-16 drop-shadow-[0_0_12px_rgba(48,113,169,0.5)]" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M55 8C29.1 8 30.7 19.2 30.7 19.2L30.8 30.8H55.4V34.3H20.6C20.6 34.3 8 32.7 8 58.7C8 84.7 19.1 83.1 19.1 83.1H30.4V72.1C30.4 72.1 29.4 58.6 42.8 58.6H69.4C69.4 58.6 82.2 58.9 82.2 46.1V22C82.2 22 84.2 8 55 8Z" fill="url(#py-blue)"/>
-                            <path d="M55 102C80.9 102 79.3 90.8 79.3 90.8L79.2 79.2H54.6V75.7H89.4C89.4 75.7 102 77.3 102 51.3C102 25.3 90.9 26.9 90.9 26.9H79.6V37.9C79.6 37.9 80.6 51.4 67.2 51.4H40.6C40.6 51.4 27.8 51.1 27.8 63.9V88C27.8 88 25.8 102 55 102Z" fill="url(#py-yellow)"/>
-                            <circle cx="41.5" cy="21.5" r="3.5" fill="#0b0f19"/>
-                            <circle cx="68.5" cy="88.5" r="3.5" fill="#0b0f19"/>
-                            <defs>
-                                <linearGradient id="py-blue" x1="8" y1="8" x2="82.2" y2="83.1" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#306998"/>
-                                    <stop offset="1" stop-color="#2d5e85"/>
-                                </linearGradient>
-                                <linearGradient id="py-yellow" x1="27.8" y1="26.9" x2="102" y2="102" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#ffd43b"/>
-                                    <stop offset="1" stop-color="#ffe873"/>
-                                </linearGradient>
-                            </defs>
+                        <!-- Verified correct scale-independent Python SVG path -->
+                        <svg class="w-16 h-16 drop-shadow-[0_0_15px_rgba(56,189,248,0.5)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.92 2C6.91 2 7.23 4.14 7.23 4.14L7.24 6.36H11.99V7H5.34C5.34 7 2 6.6 2 11.64C2 16.68 4.88 16.4 4.88 16.4H6.5V14.51C6.5 14.51 6.31 11.83 8.87 11.83H13.99C13.99 11.83 16.45 11.89 16.45 9.38V4.8C16.45 4.8 16.84 2 11.92 2Z" fill="#38bdf8"/>
+                            <path d="M12.08 22C17.09 22 16.77 19.86 16.77 19.86L16.76 17.64H12.01V17H18.66C18.66 17 22 17.4 22 12.36C22 7.32 19.12 7.6 19.12 7.6H17.5V9.49C17.5 9.49 17.69 12.17 15.13 12.17H10.01C10.01 12.17 7.55 12.11 7.55 14.62V19.2C7.55 19.2 7.16 22 12.08 22Z" fill="#ffe873"/>
+                            <circle cx="9.5" cy="4.5" r="0.75" fill="#0b0f19"/>
+                            <circle cx="14.5" cy="19.5" r="0.75" fill="#0b0f19"/>
                         </svg>
                         <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Python Script</span>
                     </div>
                 `;
             }
             
-            // HTML5 Banner
+            // HTML5 Banner (Using official FontAwesome icon with pixel-perfect resolution)
             if (normalized === 'html') {
                 return `
-                    <div class="relative w-full h-32 bg-gradient-to-br from-orange-950/40 via-slate-900 to-red-950/40 flex items-center justify-center overflow-hidden">
+                    <div class="relative w-full h-32 bg-gradient-to-br from-orange-950/20 via-slate-900 to-red-950/20 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#e34c26_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <!-- HTML5 SVG Logo -->
-                        <svg class="w-14 h-14 drop-shadow-[0_0_12px_rgba(227,76,38,0.4)]" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M108.4 0L76.5 361.3L256 512L435.5 361.3L403.6 0H108.4Z" fill="#E34C26"/>
-                            <path d="M256 34.6V474.3L401.5 352L428.5 34.6H256Z" fill="#F06529"/>
-                            <path d="M256 123.6H179.3L184.2 178.6H256V232.7H189L193.9 287.8L256 304.7V361.3L175.4 338.8L168.1 257.6H114L124.3 371L256 407.9V123.6Z" fill="#EBEBEB"/>
-                            <path d="M256 123.6V232.7H328.1L321.4 304.7L256 322V378.6L336.6 356.1L338 338.8L348.6 220.3L352.4 178.6H256V123.6Z" fill="#FFFFFF"/>
-                        </svg>
+                        <!-- Crisp, scale-independent FontAwesome inside custom glass frame -->
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-orange-500/10 rounded-2xl border border-orange-500/30 shadow-[0_0_20px_rgba(249,115,22,0.25)]">
+                            <i class="fa-brands fa-html5 text-orange-500 text-4xl drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]"></i>
+                        </div>
                         <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">HTML5 Markup</span>
                     </div>
                 `;
             }
 
-            // CSS3 Banner ✨ (NEWly Separated with CSS3 Logo)
+            // CSS3 Banner (Using official FontAwesome icon styled beautifully)
             if (normalized === 'css') {
                 return `
-                    <div class="relative w-full h-32 bg-gradient-to-br from-blue-950/40 via-slate-900 to-indigo-950/40 flex items-center justify-center overflow-hidden">
+                    <div class="relative w-full h-32 bg-gradient-to-br from-blue-950/20 via-slate-900 to-indigo-950/20 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#264de4_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <!-- CSS3 SVG Logo -->
-                        <svg class="w-14 h-14 drop-shadow-[0_0_12px_rgba(38,77,228,0.4)]" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M108.4 0L76.5 361.3L256 512L435.5 361.3L403.6 0H108.4Z" fill="#264DE4"/>
-                            <path d="M256 34.6V474.3L401.5 352L428.5 34.6H256Z" fill="#2965F1"/>
-                            <path d="M256 120.5H180L184.8 175H256V120.5ZM256 229H190L194.8 283.5L256 298.5V229ZM256 354V404L180 373L175 318.5H229L231.5 340.5L256 354Z" fill="#EBEBEB"/>
-                            <path d="M256 120.5V175H327L322.2 229H256V283.5H317.4L312 338L256 354V404L332 373L342 261L345 229L350 120.5H256Z" fill="#FFFFFF"/>
-                        </svg>
+                        <!-- Clean CSS3 FontAwesome icon -->
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-2xl border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.25)]">
+                            <i class="fa-brands fa-css3-alt text-blue-400 text-4xl drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]"></i>
+                        </div>
                         <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">CSS3 Style</span>
                     </div>
                 `;
@@ -870,13 +848,13 @@
             // TypeScript Banner
             if (normalized === 'typescript') {
                 return `
-                    <div class="relative w-full h-32 bg-gradient-to-br from-blue-950/40 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
+                    <div class="relative w-full h-32 bg-gradient-to-br from-blue-950/20 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3178c6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <!-- TypeScript SVG Emblem -->
-                        <div class="relative w-14 h-14 bg-[#3178c6] rounded-xl flex items-end justify-end p-1.5 shadow-lg shadow-blue-500/10 border border-blue-400/30">
-                            <span class="text-2xl font-black text-white leading-none tracking-tighter">TS</span>
+                        <!-- Clean block emblem for TypeScript -->
+                        <div class="w-14 h-14 bg-[#3178c6]/10 border border-[#3178c6]/50 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/10">
+                            <span class="text-2xl font-black text-[#3178c6] tracking-tighter drop-shadow-[0_0_8px_rgba(49,120,198,0.5)]">TS</span>
                         </div>
-                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Typed JS</span>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">TypeScript</span>
                     </div>
                 `;
             }
@@ -884,20 +862,12 @@
             // Java Banner
             if (normalized === 'java') {
                 return `
-                    <div class="relative w-full h-32 bg-gradient-to-br from-amber-950/40 via-slate-900 to-red-950/40 flex items-center justify-center overflow-hidden">
+                    <div class="relative w-full h-32 bg-gradient-to-br from-amber-950/20 via-slate-900 to-red-950/20 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ea2d2e_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <!-- Custom Minimal Java Coffee SVG -->
-                        <svg class="w-16 h-16 drop-shadow-[0_0_12px_rgba(234,45,46,0.4)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Steaming coffee waves -->
-                            <path d="M42 15C42 15 45 10 45 5" stroke="#F89820" stroke-width="4" stroke-linecap="round"/>
-                            <path d="M52 18C52 18 56 12 55 5" stroke="#5382A1" stroke-width="4" stroke-linecap="round"/>
-                            <path d="M60 22C60 22 65 15 63 8" stroke="#F89820" stroke-width="4" stroke-linecap="round"/>
-                            <!-- Cup -->
-                            <path d="M28 40C28 40 25 58 50 58C75 58 72 40 72 40H28Z" fill="#5382A1"/>
-                            <path d="M72 43C78 43 82 46 82 50C82 54 77 56 72 56" stroke="#5382A1" stroke-width="4" stroke-linecap="round"/>
-                            <!-- Dish plate -->
-                            <path d="M20 68C20 68 25 75 50 75C75 75 80 68 80 68H20Z" fill="#F89820"/>
-                        </svg>
+                        <!-- Java brand cup icon -->
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-2xl border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.25)]">
+                            <i class="fa-brands fa-java text-red-500 text-4xl drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]"></i>
+                        </div>
                         <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Java Source</span>
                     </div>
                 `;
@@ -906,11 +876,11 @@
             // JavaScript Banner
             if (normalized === 'javascript') {
                 return `
-                    <div class="relative w-full h-32 bg-gradient-to-br from-yellow-950/30 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
+                    <div class="relative w-full h-32 bg-gradient-to-br from-yellow-950/20 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#f1e05a_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <!-- JS Block -->
-                        <div class="w-14 h-14 bg-[#f1e05a] rounded-xl flex items-end justify-end p-1.5 shadow-lg shadow-yellow-500/10 border border-yellow-400/30">
-                            <span class="text-2xl font-black text-slate-950 leading-none tracking-tighter">JS</span>
+                        <!-- Clean JS Block -->
+                        <div class="w-14 h-14 bg-[#f1e05a]/10 border border-[#f1e05a]/50 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/10">
+                            <span class="text-2xl font-black text-[#f1e05a] tracking-tighter drop-shadow-[0_0_8px_rgba(241,224,90,0.5)]">JS</span>
                         </div>
                         <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Vanilla JS</span>
                     </div>
@@ -920,9 +890,11 @@
             // PHP Banner
             if (normalized === 'php') {
                 return `
-                    <div class="relative w-full h-32 bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
+                    <div class="relative w-full h-32 bg-gradient-to-br from-indigo-950/20 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#4f5d95_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <div class="px-4 py-2 bg-[#4f5d95] rounded-xl text-white font-black text-xl italic shadow-md shadow-indigo-500/15">PHP</div>
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-indigo-500/10 rounded-2xl border border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.25)]">
+                            <i class="fa-brands fa-php text-indigo-400 text-4xl drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"></i>
+                        </div>
                         <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Backend Web</span>
                     </div>
                 `;
@@ -933,7 +905,7 @@
                 <div class="relative w-full h-32 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800/50 flex items-center justify-center overflow-hidden">
                     <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]"></div>
                     <!-- Hexagon Code abstract SVG -->
-                    <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400/40 group-hover:text-cyan-400 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800/80 flex items-center justify-center text-cyan-400/40">
                         <i class="fa-solid fa-code text-xl"></i>
                     </div>
                     <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Source Code</span>
