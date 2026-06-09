@@ -733,13 +733,13 @@
                     const enrichedRepos = await enrichLocalCardData(localCards);
                     const owner = extractGithubOwnerFromCards(enrichedRepos);
                     let profileData = {
-                        avatar_url: './assets/placeholder.svg',
-                        login: 'local-portfolio',
-                        name: 'Local Portfolio',
+                        avatar_url: owner ? `https://github.com/${owner}.png?size=460` : './assets/placeholder.svg',
+                        login: owner || 'local-portfolio',
+                        name: owner ? owner : 'Local Portfolio',
                         bio: 'ข้อมูลการ์ดและรายละเอียดถูกดึงจากไฟล์ในเครื่อง',
-                        location: 'Local File',
-                        blog: '#',
-                        html_url: '#',
+                        location: owner ? 'GitHub User' : 'Local File',
+                        blog: owner ? `https://github.com/${owner}` : '#',
+                        html_url: owner ? `https://github.com/${owner}` : '#',
                         followers: 0,
                         public_repos: enrichedRepos.length,
                         created_at: new Date().toISOString()
@@ -767,6 +767,8 @@
                                     public_repos: profileJson.public_repos ?? profileData.public_repos,
                                     created_at: profileJson.created_at || profileData.created_at
                                 };
+                            } else {
+                                console.warn('GitHub profile fetch returned', profileRes.status, profileRes.statusText);
                             }
                         } catch (err) {
                             console.warn('Failed to fetch profile for owner', owner, err);
