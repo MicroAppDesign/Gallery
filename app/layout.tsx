@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import RemoteNavbar from "./components/RemoteNavbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Microtronic Donate & Payment",
-  description: "Modern landing page for Microtronic Thailand donations and payment flows.",
+  title: "GitGallery // Premium Developer Portfolio",
+  description: "GitGallery landing page with a dynamic GitHub profile and project gallery.",
 };
 
 export default function RootLayout({
@@ -26,11 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="th"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <RemoteNavbar />
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
     </html>
