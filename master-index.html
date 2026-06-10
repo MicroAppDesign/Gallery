@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitGallery // Premium Developer Portfolio</title>
+    <!-- Tailwind CSS local copy -->
+    <script src="./assets/tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#060913',
+                            card: '#0d1324',
+                            cardHover: '#131c35',
+                            accent: '#06b6d4', // Cyan
+                            purple: '#8b5cf6', // Violet
+                            primary: '#3b82f6', // Blue
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'Sarabun', 'sans-serif'],
+                    },
+                    animation: {
+                        'glow': 'glow 3s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 10px rgba(6, 182, 212, 0.15)' },
+                            '100%': { boxShadow: '0 0 25px rgba(6, 182, 212, 0.4)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Local fonts and icons -->
+    <link rel="stylesheet" href="./assets/fontawesome.css">
+    <link rel="stylesheet" href="./assets/fonts.css">
+    
+    <style>
+        /* ตกแต่ง Scrollbar ให้ดูโมเดิร์น */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060913;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <header class="sticky top-0 z-40 bg-brand-dark/80 backdrop-blur-xl border-b border-slate-800/60 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-violet-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                    <i class="fa-brands fa-github text-lg text-white"></i>
+                </div>
+                <span class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
+                    GitGallery
+                </span>
+            </div>
+
+            <!-- Configuration controls -->
+            <div class="flex items-center gap-3">
+                <button id="toggle-config-btn" class="flex items-center gap-2 text-xs font-semibold px-4 py-2 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg transition-all duration-300">
+                    <i class="fa-solid fa-user-gear text-cyan-400"></i>
+                    <span>เปลี่ยนบัญชี GitHub</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section id="config-drawer" class="bg-gradient-to-b from-slate-900 to-brand-dark border-b border-slate-800/80 transition-all duration-500 max-h-0 overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <div class="bg-brand-card/70 border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+                <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-screwdriver-wrench text-cyan-400"></i> ตั้งค่าบัญชี GitHub ของคุณ
+                </h3>
+                <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                    พิมพ์ Username บน GitHub ของคุณลงในช่องด้านล่างเพื่อแปลงโฉมหน้าเว็บพอร์ตโฟลิโอนี้ให้ดึงข้อมูลงานเขียนโค้ดและภาษาที่ใช้ของคุณมาแสดงแบบเรียลไทม์
+                </p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-brands fa-github absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                        <input type="text" id="username-input" placeholder="พิมพ์ชื่อผู้ใช้ เช่น torvalds, octocat..." 
+                               class="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all duration-300">
+                    </div>
+                    <button id="save-username-btn" class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-cyan-500/20 active:scale-95 transition-all duration-200">
+                        ดึงข้อมูลพอร์ต
+                    </button>
+                </div>
+                <div class="mt-3 flex gap-2">
+                    <span class="text-[11px] text-slate-500">บัญชีแนะนำ:</span>
+                    <button onclick="setSampleUser('taylorotwell')" class="text-[11px] text-cyan-400/80 hover:text-cyan-400 transition font-medium">taylorotwell (Laravel)</button>
+                    <span class="text-slate-700">•</span>
+                    <button onclick="setSampleUser('yyx990803')" class="text-[11px] text-cyan-400/80 hover:text-cyan-400 transition font-medium">yyx990803 (Vue)</button>
+                    <span class="text-slate-700">•</span>
+                    <button onclick="setSampleUser('kennethreitz')" class="text-[11px] text-cyan-400/80 hover:text-cyan-400 transition font-medium">kennethreitz (Python)</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Notification Bar -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <section class="relative mb-12 overflow-hidden rounded-3xl border border-slate-800/85 bg-gradient-to-br from-brand-card/60 via-brand-card to-slate-950/80 p-6 sm:p-8 md:p-10 shadow-2xl">
+            <!-- Neon ambient background glows -->
+            <div class="absolute -top-12 -left-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative flex flex-col md:flex-row gap-8 items-center md:items-start">
+                <!-- Profile Avatar Holder with Glow Animation -->
+                <div class="relative group">
+                    <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-cyan-500 to-violet-600 opacity-60 group-hover:opacity-100 transition duration-500 blur-sm"></div>
+                    <div class="relative w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
+                        <img id="profile-avatar" src="./assets/placeholder.svg" alt="GitHub Profile" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                </div>
+
+                <!-- Profile Bio & Meta -->
+                <div class="flex-1 text-center md:text-left">
+                    <div class="flex flex-col md:flex-row md:items-center gap-3 justify-center md:justify-start">
+                        <h1 id="profile-name" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                            กำลังโหลดโปรไฟล์...
+                        </h1>
+                        <span id="profile-login" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700/60 text-slate-300 w-fit mx-auto md:mx-0">
+                            @github
+                        </span>
+                    </div>
+
+                    <p id="profile-bio" class="text-sm sm:text-base text-slate-400 mt-3 max-w-2xl leading-relaxed">
+                        โปรดตั้งชื่อผู้ใช้ GitHub เพื่อแสดงประวัติย่อแบบไดนามิกพร้อมข้อมูลผลงาน...
+                    </p>
+
+                    <!-- Location & Links -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-5 text-xs text-slate-400">
+                        <span id="profile-loc" class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-dot text-slate-500"></i>
+                            <span>--</span>
+                        </span>
+                        <span id="profile-link-wrap" class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-link text-slate-500"></i>
+                            <a id="profile-url" href="#" target="_blank" class="hover:text-cyan-400 transition">--</a>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-calendar text-slate-500"></i>
+                            <span id="profile-joined">เข้าร่วม --</span>
+                        </span>
+                    </div>
+
+                    <!-- Metrics Badges -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-6">
+                        <div class="px-4 py-2 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center gap-2">
+                            <i class="fa-solid fa-folder-closed text-cyan-400"></i>
+                            <div class="text-left">
+                                <p class="text-[10px] text-slate-500 uppercase tracking-widest leading-none">Public Repos</p>
+                                <span id="metric-repos" class="text-sm font-bold text-white">0</span>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center gap-2">
+                            <i class="fa-solid fa-users text-violet-400"></i>
+                            <div class="text-left">
+                                <p class="text-[10px] text-slate-500 uppercase tracking-widest leading-none">Followers</p>
+                                <span id="metric-followers" class="text-sm font-bold text-white">0</span>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <div class="text-left">
+                                <p class="text-[10px] text-slate-500 uppercase tracking-widest leading-none">Total Stars</p>
+                                <span id="metric-stars" class="text-sm font-bold text-white">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Top Languages Box -->
+            <div class="lg:col-span-2 bg-brand-card/40 border border-slate-800/80 rounded-2xl p-5 md:p-6 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-cyan-400"></i> ความถนัดทางภาษาคอมพิวเตอร์ (Top Languages)
+                    </h3>
+                    <div id="languages-bars" class="space-y-3.5">
+                        <!-- Dynamic language progress bars here -->
+                        <div class="text-center text-slate-500 text-xs py-8">ไม่มีข้อมูลสถิติภาษา</div>
+                    </div>
+                </div>
+                <div class="text-[11px] text-slate-500 mt-4 pt-4 border-t border-slate-800/60">
+                    *คำนวณจากสัดส่วนประเภทโค้ดใน 100 Repository ล่าสุดที่จัดเก็บไว้
+                </div>
+            </div>
+
+            <!-- Profile Interactive Quick-card -->
+            <div class="bg-gradient-to-br from-brand-card/70 to-slate-950/70 border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 text-9xl text-slate-800/10 pointer-events-none">
+                    <i class="fa-brands fa-github"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-3">
+                        ลิงก์เชื่อมต่อด่วน
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        เปิดดูพอร์ตโฟลิโอต้นฉบับในแพลตฟอร์มหลักของ GitHub เพื่อเช็คความเคลื่อนไหวล่าสุด (Contribution graph) หรือติดตามผู้พัฒนารายนี้
+                    </p>
+                </div>
+                <div class="space-y-2 mt-6">
+                    <a id="btn-visit-github" href="#" target="_blank" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-xs tracking-wider uppercase rounded-xl flex items-center justify-center gap-2 transition duration-300">
+                        <i class="fa-brands fa-github text-sm"></i> เปิดดูบน GitHub
+                    </a>
+                    <button onclick="copyPortfolioLink()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs tracking-wider uppercase rounded-xl border border-slate-700/60 flex items-center justify-center gap-2 transition duration-300">
+                        <i class="fa-regular fa-copy"></i> คัดลอกลิงก์พอร์ตโฟลิโอนี้
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✨ NEW: Gemini AI Recruiter Insight Section -->
+        <section class="mb-12">
+            <div class="relative overflow-hidden rounded-3xl border border-cyan-500/20 bg-gradient-to-r from-slate-950 via-[#0a1224] to-slate-950 p-6 md:p-8 shadow-2xl">
+                <!-- Accent Neon Glow -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-32 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="space-y-2 max-w-2xl">
+                        <div class="flex items-center gap-2">
+                            <span class="px-3 py-1 bg-cyan-950/55 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold tracking-widest uppercase rounded-full">AI Powered Insight</span>
+                            <span class="animate-pulse w-2 h-2 rounded-full bg-cyan-400"></span>
+                        </div>
+                        <h2 class="text-xl font-black text-white tracking-tight">
+                            วิเคราะห์พอร์ตและศักยภาพนักพัฒนาด้วย AI อัจฉริยะ ✨
+                        </h2>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            วิเคราะห์สไตล์การเขียนโค้ด, คลังโปรเจกต์ (Repositories) และทักษะเฉพาะตัวของคุณโดยใช้เทคโนโลยีระดับสูงของ Gemini API เพื่อประเมินสายงานเด่น พร้อมรองรับการสังเคราะห์เสียงแบบ AI Voice เผยแพร่ผลงานของคุณอย่างมืออาชีพ
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button id="ai-analyze-btn" onclick="runAIProfileAnalysis()" class="px-5 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/20 active:scale-95 transition-all duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-sm animate-bounce"></i>
+                            วิเคราะห์พอร์ตด้วย AI ✨
+                        </button>
+                        <button id="ai-tts-btn" onclick="speakAIAnalysis()" disabled class="px-4 py-3 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-950/50 disabled:text-slate-700 disabled:border-slate-900 border border-slate-800 text-slate-300 font-extrabold text-xs uppercase tracking-wider rounded-xl transition duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                            ฟังเสียงบรรยายด้วย AI ✨
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Output Content Area -->
+                <div id="ai-analysis-output-box" class="hidden mt-8 pt-6 border-t border-slate-800/80 transition-all duration-500">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 shadow-lg shadow-cyan-500/10">
+                            <i class="fa-solid fa-robot text-base"></i>
+                        </div>
+                        <div class="flex-1 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-cyan-400">บทประเมินผู้พัฒนาโดยรวม (Recruiter Review):</h4>
+                                <span class="text-[10px] text-slate-500 font-mono" id="ai-timestamp">Generated Just Now</span>
+                            </div>
+                            <div id="ai-analysis-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-3 font-sans">
+                                <!-- Dynamic markdown report injected here -->
+                            </div>
+                            <!-- Audio player wrapper -->
+                            <div id="ai-audio-wrapper" class="hidden mt-4 pt-4 border-t border-slate-900 flex items-center gap-3">
+                                <audio id="ai-audio-player" class="hidden" controls></audio>
+                                <div class="text-[10px] text-cyan-500/80 font-semibold flex items-center gap-1.5 bg-cyan-950/20 border border-cyan-950 px-3 py-1.5 rounded-lg">
+                                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                                    เล่นเสียงวิเคราะห์สังเคราะห์พิเศษ (Gemini Audio)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+                <!-- Navigation Tab title -->
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse"></div>
+                    <h2 class="text-lg font-extrabold text-white tracking-tight uppercase">
+                        ผลงานจัดเก็บในแกลเลอรี่ (<span id="gallery-count">0</span>)
+                    </h2>
+                </div>
+
+                <!-- Searching, Filters & Sorters -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <!-- Search Input -->
+                    <div class="relative flex-1 sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="repo-search" placeholder="พิมพ์เพื่อค้นหาคลัง..." 
+                               class="w-full bg-slate-900 border border-slate-800 focus:border-cyan-500 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none transition">
+                    </div>
+
+                    <!-- Sort Select dropdown -->
+                    <div class="relative">
+                        <select id="repo-sort" class="appearance-none bg-slate-900 border border-slate-800 focus:border-cyan-500 rounded-xl pl-4 pr-10 py-2 text-xs text-slate-200 focus:outline-none cursor-pointer transition">
+                            <option value="stars">เรียงตาม: ยอดดาว (Stars)</option>
+                            <option value="updated">เรียงตาม: อัปเดตล่าสุด</option>
+                            <option value="name">เรียงตาม: ชื่ออัลฟาเบท (A-Z)</option>
+                            <option value="size">เรียงตาม: ขนาดโฟลเดอร์</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-[10px] pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Language Tags filter buttons list -->
+            <div id="language-filter-container" class="flex flex-wrap items-center gap-1.5 mt-4 border-t border-slate-800/40 pt-4">
+                <span class="text-xs text-slate-500 mr-1.5">ตัวกรองภาษา:</span>
+                <button onclick="filterByLanguage('All')" class="lang-filter-btn px-3 py-1 bg-cyan-500 text-black text-xs font-semibold rounded-lg hover:opacity-90 transition">
+                    ทั้งหมด
+                </button>
+            </div>
+        </section>
+
+        <!-- Repositories Grid Display -->
+        <section class="relative min-h-[400px]">
+            <!-- Dynamic Grid container -->
+            <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300">
+                <!-- Interactive project card blueprints (Injected via Javascript) -->
+            </div>
+
+            <!-- Loader element screen -->
+            <div id="gallery-loader" class="absolute inset-0 bg-brand-dark/95 backdrop-blur-sm flex flex-col items-center justify-center gap-3.5 transition-all duration-300">
+                <div class="relative w-12 h-12">
+                    <div class="absolute inset-0 border-4 border-slate-850 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-t-cyan-500 rounded-full animate-spin"></div>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 tracking-wider">กำลังดึงและแปลงข้อมูลพอร์ตโฟลิโอ...</span>
+            </div>
+
+            <!-- Fallback Empty State / Error UI -->
+            <div id="gallery-empty" class="hidden py-24 flex flex-col items-center justify-center text-center max-w-md mx-auto">
+                <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600 mb-4 text-2xl">
+                    <i class="fa-solid fa-ghost"></i>
+                </div>
+                <h3 class="text-base font-bold text-white mb-2">ไม่พบโปรเจกต์ใดๆ</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mb-5">
+                    ไม่พบคลังโครงการสาธารณะตรงตามเงื่อนไขค้นหา หรืออาจเกิดข้อผิดพลาดในการโหลดโปรไฟล์
+                </p>
+                <button onclick="resetFilters()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition">
+                    ล้างการค้นหา
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Detailed Repository Inspector Modal overlay -->
+    <dialog id="repo-inspector" class="backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm bg-transparent border-none overflow-visible max-w-2xl w-full p-4 focus:outline-none">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
+            
+            <!-- Header section of modal inside -->
+            <div class="bg-slate-950 p-6 border-b border-slate-800/80 relative">
+                <!-- Close Button -->
+                <button onclick="closeInspector()" class="absolute right-6 top-6 w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+                <div class="pr-10">
+                    <span id="modal-lang-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-cyan-900/40 text-cyan-400 border border-cyan-800/50">
+                        LANG
+                    </span>
+                    <h3 id="modal-title" class="text-xl font-extrabold text-white mt-3 tracking-tight truncate">
+                        Project Repository Name
+                    </h3>
+                    <p id="modal-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">
+                        No description for this repository.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Metrics details Grid -->
+            <div class="p-6 space-y-6">
+                <!-- ✨ NEW: Gemini AI Pitch Generator block in Modal -->
+                <div class="bg-[#0b0f19] border border-cyan-500/10 p-4 rounded-xl space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <div class="flex items-center gap-1.5 text-xs font-bold text-white uppercase tracking-wider">
+                            <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i>
+                            <span>AI Elevator Pitch ✨</span>
+                        </div>
+                        <button id="ai-pitch-btn" onclick="generateAIPitch()" class="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500 hover:text-black border border-cyan-500/25 text-cyan-400 text-[10px] font-bold uppercase rounded-lg tracking-wider transition duration-300">
+                            สร้างคำโปรยโปรเจกต์ ✨
+                        </button>
+                    </div>
+                    <div id="ai-pitch-output" class="hidden text-xs text-slate-300 leading-relaxed italic border-l-2 border-cyan-500 pl-3 py-1">
+                        <!-- Pitch output generated dynamically -->
+                    </div>
+                    <div id="ai-pitch-loader" class="hidden text-[10px] text-slate-500 flex items-center gap-1.5">
+                        <span class="animate-ping w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                        <span>กำลังใช้ Gemini AI ช่วยเขียนคำบรรยายอย่างเฉียบคม...</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/50 text-center">
+                        <i class="fa-regular fa-star text-amber-500 mb-1.5 text-sm"></i>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Stars</p>
+                        <p id="modal-stars" class="text-sm font-bold text-white mt-0.5">0</p>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/50 text-center">
+                        <i class="fa-solid fa-code-fork text-blue-500 mb-1.5 text-sm"></i>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Forks</p>
+                        <p id="modal-forks" class="text-sm font-bold text-white mt-0.5">0</p>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/50 text-center">
+                        <i class="fa-regular fa-eye text-violet-500 mb-1.5 text-sm"></i>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Watchers</p>
+                        <p id="modal-watchers" class="text-sm font-bold text-white mt-0.5">0</p>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/50 text-center">
+                        <i class="fa-solid fa-database text-green-500 mb-1.5 text-sm"></i>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Size KB</p>
+                        <p id="modal-size" class="text-sm font-bold text-white mt-0.5">0</p>
+                    </div>
+                </div>
+
+                <!-- Technical summary -->
+                <div class="space-y-3.5 bg-slate-950/40 p-4 rounded-xl border border-slate-800/40 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">License ของโค้ด:</span>
+                        <span id="modal-license" class="font-semibold text-slate-300">None</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">วันที่สร้างครั้งแรก:</span>
+                        <span id="modal-created" class="font-semibold text-slate-300">--</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">อัปเดตระบบล่าสุด:</span>
+                        <span id="modal-updated" class="font-semibold text-slate-300">--</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">สถานะกิ่ง (Default Branch):</span>
+                        <span id="modal-branch" class="font-semibold text-cyan-400 font-mono">main</span>
+                    </div>
+                </div>
+
+                <!-- Footer control within modal -->
+                <div class="flex items-center gap-3 pt-2">
+                    <a id="modal-github-link" href="#" target="_blank" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-extrabold uppercase tracking-wider rounded-xl text-center shadow-lg shadow-cyan-500/15 transition duration-300">
+                        <i class="fa-brands fa-github text-sm mr-1"></i> ตรวจสอบโค้ดบน GitHub
+                    </a>
+                    <button onclick="closeInspector()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition duration-300">
+                        ปิดหน้าต่าง
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </dialog>
+
+    <!-- Web Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900/80 py-8 text-center mt-12 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 text-xs text-slate-600 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 Developed with Ultra Tech Design. All public properties belong to developer.</p>
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[10px] tracking-widest uppercase">API Live status Connected</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Core states of Application
+        const currentUsername = 'MicroAppDesign'; // Locked GitHub profile display
+        let userProfileData = {};
+        let originalRepositories = [];
+        let filteredRepositories = [];
+        let activeLanguageFilter = 'All';
+
+        // ✨ AI States
+        const apiKey = ""; // Runtime fallback
+        let aiAnalysisTextCache = "";
+        let isSpeaking = false;
+        let pcmAudioBuffer = null;
+
+        // Initialize selectors
+        const drawer = document.getElementById('config-drawer');
+        const usernameInput = document.getElementById('username-input');
+        const loader = document.getElementById('gallery-loader');
+        const grid = document.getElementById('gallery-grid');
+        const emptyState = document.getElementById('gallery-empty');
+
+        // Color representations for different programming tech
+        const languageColors = {
+            'JavaScript': '#f1e05a',
+            'TypeScript': '#3178c6',
+            'Python': '#3572A5',
+            'HTML': '#e34c26',
+            'CSS': '#38bdf8', // Updated to Cyan-blue style to match CSS3
+            'PHP': '#4F5D95',
+            'Ruby': '#701516',
+            'Java': '#b07219',
+            'C++': '#f34b7d',
+            'C#': '#178600',
+            'Go': '#00ADD8',
+            'Rust': '#dea584',
+            'Swift': '#F05138',
+            'Dart': '#00B4AB',
+            'Kotlin': '#A97BFF',
+            'Vue': '#41b883',
+            'Shell': '#89e051'
+        };
+
+        // Initialize and check LocalStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            usernameInput.value = currentUsername;
+            usernameInput.disabled = true;
+            document.getElementById('save-username-btn').disabled = true;
+            document.getElementById('save-username-btn').textContent = 'Locked to MicroAppDesign';
+            
+            // Build event listeners
+            document.getElementById('toggle-config-btn').addEventListener('click', () => toggleConfigDrawer());
+            document.getElementById('repo-search').addEventListener('input', handleFilterAndSort);
+            document.getElementById('repo-sort').addEventListener('change', handleFilterAndSort);
+            
+            // Initial API Fetch load run
+            fetchAndRenderPortfolio();
+        });
+
+        // Toggle configuration header slider
+        function toggleConfigDrawer(forceState = null) {
+            if (forceState === true || (forceState === null && drawer.style.maxHeight !== '300px')) {
+                drawer.style.maxHeight = '300px';
+            } else {
+                drawer.style.maxHeight = '0px';
+            }
+        }
+
+        // Custom Toast notifications inside App instead of alert()
+        function triggerNotification(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            // Style setup
+            const bgClass = type === 'success' ? 'bg-[#0d162a] border-emerald-500/30 text-emerald-400' : 'bg-red-950/80 border-red-500/30 text-red-400';
+            const iconClass = type === 'success' ? 'fa-regular fa-circle-check text-emerald-400' : 'fa-solid fa-triangle-exclamation text-red-400';
+            
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl border ${bgClass} shadow-xl text-xs font-semibold pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 max-w-sm`;
+            toast.innerHTML = `
+                <i class="${iconClass} text-sm"></i>
+                <div class="flex-1">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            // Auto Remove After duration
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4500);
+        }
+
+        // Quick set recommended accounts
+        function setSampleUser(name) {
+            triggerNotification('บัญชีถูกล็อกไว้ที่ MicroAppDesign แล้ว ไม่สามารถเปลี่ยนผู้ใช้ได้', 'info');
+        }
+
+        // Update username configuration
+        function saveAndRefreshUser() {
+            triggerNotification('บัญชีถูกล็อกไว้ที่ MicroAppDesign แล้ว ไม่สามารถเปลี่ยนผู้ใช้ได้', 'info');
+            fetchAndRenderPortfolio();
+        }
+
+        // Load local card data from text or markdown file when available
+        async function loadLocalCardData() {
+            const candidateFiles = ['./assets/cards/projects.md', './assets/cards/projects.txt'];
+            for (const filePath of candidateFiles) {
+                try {
+                    const response = await fetch(filePath);
+                    if (!response.ok) continue;
+                    const raw = await response.text();
+                    const cards = parseLocalCardData(raw);
+                    if (cards.length) {
+                        return cards;
+                    }
+                } catch (err) {
+                    // Ignore and try next source
+                }
+            }
+            return null;
+        }
+
+        function parseLocalCardData(rawText) {
+            const sections = rawText.split(/\r?\n-{3,}\r?\n/).map(s => s.trim()).filter(Boolean);
+            return sections.map(section => {
+                const lines = section.split(/\r?\n/);
+                const card = {};
+                let currentKey = null;
+                let currentValue = '';
+
+                lines.forEach(line => {
+                    const keyMatch = line.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);
+                    if (keyMatch) {
+                        if (currentKey) {
+                            card[currentKey] = currentValue.trim();
+                        }
+                        currentKey = keyMatch[1];
+                        currentValue = keyMatch[2] || '';
+                    } else if (currentKey) {
+                        currentValue += `\n${line.trim()}`;
+                    }
+                });
+
+                if (currentKey) {
+                    card[currentKey] = currentValue.trim();
+                }
+
+                card.name = card.name || 'Unnamed Project';
+                card.description = card.description || 'ไม่มีคำอธิบายสำหรับโครงการนี้';
+                card.language = card.language || 'Unknown';
+                card.html_url = card.html_url || '#';
+                card.license = null;
+                card.default_branch = 'main';
+                card.created_at = new Date().toISOString();
+                card.updated_at = card.created_at;
+                card.fork = false;
+                card.stargazers_count = 0;
+                card.forks_count = 0;
+                card.watchers_count = 0;
+                card.size = 0;
+
+                return card;
+            });
+        }
+
+        async function enrichLocalCardData(repos) {
+            const githubRepoPromises = repos.map(async repo => {
+                if (!repo.html_url || !repo.html_url.includes('github.com')) {
+                    return repo;
+                }
+
+                const match = repo.html_url.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/|$)/i);
+                if (!match) {
+                    return repo;
+                }
+
+                const owner = match[1];
+                const name = match[2];
+                const apiUrl = `https://api.github.com/repos/${owner}/${name}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        headers: {
+                            Accept: 'application/vnd.github+json',
+                            'User-Agent': 'GitGallery-Local-Repo-Enricher'
+                        }
+                    });
+                    if (!response.ok) {
+                        return repo;
+                    }
+
+                    const data = await response.json();
+                    return {
+                        ...repo,
+                        description: data.description || repo.description,
+                        language: data.language || repo.language,
+                        stargazers_count: data.stargazers_count ?? repo.stargazers_count,
+                        forks_count: data.forks_count ?? repo.forks_count,
+                        watchers_count: data.watchers_count ?? repo.watchers_count,
+                        size: data.size ?? repo.size,
+                        license: data.license || repo.license,
+                        default_branch: data.default_branch || repo.default_branch,
+                        created_at: data.created_at || repo.created_at,
+                        updated_at: data.updated_at || repo.updated_at,
+                        html_url: data.html_url || repo.html_url
+                    };
+                } catch (err) {
+                    return repo;
+                }
+            });
+
+            const settled = await Promise.allSettled(githubRepoPromises);
+            return settled.map(result => (result.status === 'fulfilled' ? result.value : null)).filter(Boolean);
+        }
+
+        function extractGithubOwnerFromCards(repos) {
+            for (const repo of repos) {
+                if (!repo.html_url || !repo.html_url.includes('github.com')) continue;
+                const match = repo.html_url.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/|$)/i);
+                if (match) {
+                    return match[1];
+                }
+            }
+            return null;
+        }
+
+        // Core Fetch function retrieving both profile and repository packages
+        async function fetchAndRenderPortfolio() {
+            showLoader(true);
+            
+            // Reset AI analysis panel
+            document.getElementById('ai-analysis-output-box').classList.add('hidden');
+            document.getElementById('ai-tts-btn').disabled = true;
+            pcmAudioBuffer = null;
+            aiAnalysisTextCache = "";
+            isSpeaking = false;
+            
+            try {
+                const localCards = await loadLocalCardData();
+                if (localCards) {
+                    const enrichedRepos = await enrichLocalCardData(localCards);
+                    const owner = extractGithubOwnerFromCards(enrichedRepos);
+                    let profileData = {
+                        avatar_url: owner ? `https://github.com/${owner}.png?size=460` : './assets/placeholder.svg',
+                        login: owner || 'local-portfolio',
+                        name: owner ? owner : 'Local Portfolio',
+                        bio: 'ข้อมูลการ์ดและรายละเอียดถูกดึงจากไฟล์ในเครื่อง',
+                        location: owner ? 'GitHub User' : 'Local File',
+                        blog: owner ? `https://github.com/${owner}` : '#',
+                        html_url: owner ? `https://github.com/${owner}` : '#',
+                        followers: 0,
+                        public_repos: enrichedRepos.length,
+                        created_at: new Date().toISOString()
+                    };
+
+                    if (owner) {
+                        try {
+                            const profileRes = await fetch(`https://api.github.com/users/${owner}`, {
+                                headers: {
+                                    Accept: 'application/vnd.github+json',
+                                    'User-Agent': 'GitGallery-Local-Profile'
+                                }
+                            });
+                            if (profileRes.ok) {
+                                const profileJson = await profileRes.json();
+                                profileData = {
+                                    avatar_url: profileJson.avatar_url || profileData.avatar_url,
+                                    login: profileJson.login || profileData.login,
+                                    name: profileJson.name || profileJson.login || profileData.name,
+                                    bio: profileJson.bio || profileData.bio,
+                                    location: profileJson.location || profileData.location,
+                                    blog: profileJson.blog || profileJson.html_url || profileData.blog,
+                                    html_url: profileJson.html_url || profileData.html_url,
+                                    followers: profileJson.followers ?? profileData.followers,
+                                    public_repos: profileJson.public_repos ?? profileData.public_repos,
+                                    created_at: profileJson.created_at || profileData.created_at
+                                };
+                            } else {
+                                console.warn('GitHub profile fetch returned', profileRes.status, profileRes.statusText);
+                            }
+                        } catch (err) {
+                            console.warn('Failed to fetch profile for owner', owner, err);
+                        }
+                    }
+
+                    userProfileData = profileData;
+                    originalRepositories = enrichedRepos;
+                    renderUserProfile();
+                    calculateAndRenderLanguageAnalytics();
+                    generateLanguageFilterButtons();
+                    handleFilterAndSort();
+
+                    triggerNotification('โหลดการ์ดจากไฟล์ในเครื่องเรียบร้อยแล้ว! (ข้อมูลโปรไฟล์จาก GitHub ถูกเติมโดยอัตโนมัติ)');
+                    return;
+                }
+
+                // Fetch basic developer profile information
+                const userRes = await fetch(`https://api.github.com/users/${currentUsername}`);
+                
+                if (!userRes.ok) {
+                    if (userRes.status === 404) {
+                        throw new Error('ไม่พบบัญชีผู้ใช้งาน GitHub ดังกล่าว');
+                    } else if (userRes.status === 403) {
+                        throw new Error('เรียกใช้ API เกินลิมิตชั่วคราว (Rate Limit) กรุณาลองใหม่อีกครึ่งชั่วโมง');
+                    }
+                    throw new Error('ไม่สามารถเข้าถึงเซิร์ฟเวอร์ GitHub API ได้ในขณะนี้');
+                }
+
+                userProfileData = await userRes.json();
+                
+                // Fetch active public repositories (capped up to 100 entries)
+                const repoRes = await fetch(`https://api.github.com/users/${currentUsername}/repos?per_page=100&sort=updated`);
+                if (!repoRes.ok) throw new Error('ไม่สามารถดึงข้อมูล Repository ได้');
+                
+                const reposData = await repoRes.json();
+                
+                // Exclude forked repositories (We only want the creator's real original works)
+                originalRepositories = reposData.filter(r => !r.fork);
+                
+                // Render elements
+                renderUserProfile();
+                calculateAndRenderLanguageAnalytics();
+                generateLanguageFilterButtons();
+                handleFilterAndSort(); // This will render the grid cards inside
+
+                triggerNotification(`ดึงข้อมูลผลงานของ @${currentUsername} เรียบร้อยแล้ว!`);
+            } catch (err) {
+                console.error(err);
+                triggerNotification(err.message || 'ตรวจพบข้อผิดพลาดระบบ', 'error');
+                showEmptyState(true);
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Render upper user header components
+        function renderUserProfile() {
+            document.getElementById('profile-avatar').src = userProfileData.avatar_url || './assets/placeholder.svg';
+            document.getElementById('profile-name').textContent = userProfileData.name || userProfileData.login;
+            document.getElementById('profile-login').textContent = `@${userProfileData.login}`;
+            document.getElementById('profile-bio').textContent = userProfileData.bio || 'This GitHub developer has configured no specific profile biography details yet.';
+            
+            // Location
+            const locEl = document.getElementById('profile-loc');
+            if (userProfileData.location) {
+                locEl.querySelector('span').textContent = userProfileData.location;
+                locEl.classList.remove('hidden');
+            } else {
+                locEl.classList.add('hidden');
+            }
+
+            // External url link setup
+            const webLink = userProfileData.blog || userProfileData.html_url || '';
+            const linkWrap = document.getElementById('profile-link-wrap');
+            const urlEl = document.getElementById('profile-url');
+
+            if (webLink && webLink !== '#' && webLink !== 'null') {
+                urlEl.href = webLink.startsWith('http') ? webLink : `https://${webLink}`;
+                urlEl.textContent = userProfileData.blog ? userProfileData.blog : webLink.replace(/^https?:\/\//, '');
+                linkWrap.classList.remove('hidden');
+            } else {
+                linkWrap.classList.add('hidden');
+            }
+
+            // Membership joining year
+            if (userProfileData.created_at) {
+                const year = new Date(userProfileData.created_at).getFullYear();
+                document.getElementById('profile-joined').textContent = `เข้าร่วมปี ${year}`;
+            }
+
+            // Metrics tags
+            document.getElementById('metric-repos').textContent = originalRepositories.length;
+            document.getElementById('metric-followers').textContent = formatInt(userProfileData.followers);
+            
+            // Total cumulative stars on own repos
+            const starsSum = originalRepositories.reduce((acc, curr) => acc + curr.stargazers_count, 0);
+            document.getElementById('metric-stars').textContent = formatInt(starsSum);
+
+            // Connect External Redirect elements
+            document.getElementById('btn-visit-github').href = userProfileData.html_url;
+        }
+
+        // Generate metrics and charts about most utilized languages on profile
+        function calculateAndRenderLanguageAnalytics() {
+            const countMap = {};
+            let validRepoCount = 0;
+
+            originalRepositories.forEach(repo => {
+                if (repo.language) {
+                    countMap[repo.language] = (countMap[repo.language] || 0) + 1;
+                    validRepoCount++;
+                }
+            });
+
+            const sortedLanguages = Object.entries(countMap)
+                .map(([name, count]) => {
+                    const percentage = validRepoCount > 0 ? Math.round((count / validRepoCount) * 100) : 0;
+                    return { name, count, percentage };
+                })
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 4); // Show top 4
+
+            const container = document.getElementById('languages-bars');
+            
+            if (sortedLanguages.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-500 text-xs py-8">ตรวจไม่พบข้อมูลสัดส่วนภาษาเขียนโค้ดหลัก</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            sortedLanguages.forEach(lang => {
+                const color = languageColors[lang.name] || '#64748b';
+                
+                const langHTML = `
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-200 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${color}"></span>
+                                ${lang.name}
+                            </span>
+                            <span class="text-slate-400 font-medium">${lang.percentage}% (${lang.count} Repo)</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800/60 p-0.5">
+                            <div class="h-full rounded-full transition-all duration-1000" style="width: ${lang.percentage}%; background-color: ${color};"></div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', langHTML);
+            });
+        }
+
+        // Create Dynamic clickable tag filters list on top of gallery
+        function generateLanguageFilterButtons() {
+            const filterWrap = document.getElementById('language-filter-container');
+            
+            // Extract distinct languages
+            const languageSet = new Set();
+            originalRepositories.forEach(r => {
+                if (r.language) languageSet.add(r.language);
+            });
+
+            // Reconstruct filter header basic items
+            filterWrap.innerHTML = `
+                <span class="text-xs text-slate-500 mr-1.5">ตัวกรองภาษา:</span>
+                <button onclick="filterByLanguage('All')" class="lang-filter-btn px-3 py-1 text-xs font-semibold rounded-lg transition ${activeLanguageFilter === 'All' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/20' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}">
+                    ทั้งหมด (${originalRepositories.length})
+                </button>
+            `;
+
+            // Append each unique language
+            Array.from(languageSet).sort().forEach(lang => {
+                const count = originalRepositories.filter(r => r.language === lang).length;
+                const isActive = activeLanguageFilter === lang;
+                const buttonHTML = `
+                    <button onclick="filterByLanguage('${lang}')" class="lang-filter-btn px-3 py-1 text-xs font-semibold rounded-lg transition ${isActive ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/20' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}">
+                        ${lang} (${count})
+                    </button>
+                `;
+                filterWrap.insertAdjacentHTML('beforeend', buttonHTML);
+            });
+        }
+
+        // Set Language tag selection active state
+        function filterByLanguage(lang) {
+            activeLanguageFilter = lang;
+            
+            // Re-render language active styles
+            generateLanguageFilterButtons();
+            handleFilterAndSort();
+        }
+
+        // Helper function: Generate a gorgeous custom SVG language placeholder cover banner (Fixed distorted images reference image_2757e2.png)
+        function getLanguageBanner(language) {
+            const normalized = language ? language.toLowerCase() : 'other';
+            
+            // Python Banner (Robust scale-independent SVG paths)
+            if (normalized === 'python') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-blue-950/40 flex items-center justify-center overflow-hidden">
+                        <!-- Tech background details -->
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3071a9_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <!-- Verified correct scale-independent Python SVG path -->
+                        <svg class="w-16 h-16 drop-shadow-[0_0_15px_rgba(56,189,248,0.5)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.92 2C6.91 2 7.23 4.14 7.23 4.14L7.24 6.36H11.99V7H5.34C5.34 7 2 6.6 2 11.64C2 16.68 4.88 16.4 4.88 16.4H6.5V14.51C6.5 14.51 6.31 11.83 8.87 11.83H13.99C13.99 11.83 16.45 11.89 16.45 9.38V4.8C16.45 4.8 16.84 2 11.92 2Z" fill="#38bdf8"/>
+                            <path d="M12.08 22C17.09 22 16.77 19.86 16.77 19.86L16.76 17.64H12.01V17H18.66C18.66 17 22 17.4 22 12.36C22 7.32 19.12 7.6 19.12 7.6H17.5V9.49C17.5 9.49 17.69 12.17 15.13 12.17H10.01C10.01 12.17 7.55 12.11 7.55 14.62V19.2C7.55 19.2 7.16 22 12.08 22Z" fill="#ffe873"/>
+                            <circle cx="9.5" cy="4.5" r="0.75" fill="#0b0f19"/>
+                            <circle cx="14.5" cy="19.5" r="0.75" fill="#0b0f19"/>
+                        </svg>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Python Script</span>
+                    </div>
+                `;
+            }
+            
+            // HTML5 Banner (Using official FontAwesome icon with pixel-perfect resolution)
+            if (normalized === 'html') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-orange-950/20 via-slate-900 to-red-950/20 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#e34c26_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <!-- Crisp, scale-independent FontAwesome inside custom glass frame -->
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-orange-500/10 rounded-2xl border border-orange-500/30 shadow-[0_0_20px_rgba(249,115,22,0.25)]">
+                            <i class="fa-brands fa-html5 text-orange-500 text-4xl drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]"></i>
+                        </div>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">HTML5 Markup</span>
+                    </div>
+                `;
+            }
+
+            // CSS3 Banner (Using official FontAwesome icon styled beautifully)
+            if (normalized === 'css') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-blue-950/20 via-slate-900 to-indigo-950/20 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#264de4_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <!-- Clean CSS3 FontAwesome icon -->
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-2xl border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.25)]">
+                            <i class="fa-brands fa-css3-alt text-blue-400 text-4xl drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]"></i>
+                        </div>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">CSS3 Style</span>
+                    </div>
+                `;
+            }
+
+            // TypeScript Banner
+            if (normalized === 'typescript') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-blue-950/20 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3178c6_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <!-- Clean block emblem for TypeScript -->
+                        <div class="w-14 h-14 bg-[#3178c6]/10 border border-[#3178c6]/50 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/10">
+                            <span class="text-2xl font-black text-[#3178c6] tracking-tighter drop-shadow-[0_0_8px_rgba(49,120,198,0.5)]">TS</span>
+                        </div>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">TypeScript</span>
+                    </div>
+                `;
+            }
+
+            // Java Banner
+            if (normalized === 'java') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-amber-950/20 via-slate-900 to-red-950/20 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ea2d2e_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <!-- Java brand cup icon -->
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-2xl border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.25)]">
+                            <i class="fa-brands fa-java text-red-500 text-4xl drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]"></i>
+                        </div>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Java Source</span>
+                    </div>
+                `;
+            }
+
+            // JavaScript Banner
+            if (normalized === 'javascript') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-yellow-950/20 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#f1e05a_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <!-- Clean JS Block -->
+                        <div class="w-14 h-14 bg-[#f1e05a]/10 border border-[#f1e05a]/50 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/10">
+                            <span class="text-2xl font-black text-[#f1e05a] tracking-tighter drop-shadow-[0_0_8px_rgba(241,224,90,0.5)]">JS</span>
+                        </div>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Vanilla JS</span>
+                    </div>
+                `;
+            }
+
+            // PHP Banner
+            if (normalized === 'php') {
+                return `
+                    <div class="relative w-full h-32 bg-gradient-to-br from-indigo-950/20 via-slate-900 to-slate-950 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#4f5d95_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <div class="relative flex items-center justify-center w-16 h-16 bg-indigo-500/10 rounded-2xl border border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.25)]">
+                            <i class="fa-brands fa-php text-indigo-400 text-4xl drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"></i>
+                        </div>
+                        <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Backend Web</span>
+                    </div>
+                `;
+            }
+
+            // General / Default Banner
+            return `
+                <div class="relative w-full h-32 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800/50 flex items-center justify-center overflow-hidden">
+                    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <!-- Hexagon Code abstract SVG -->
+                    <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800/80 flex items-center justify-center text-cyan-400/40">
+                        <i class="fa-solid fa-code text-xl"></i>
+                    </div>
+                    <span class="absolute bottom-2.5 right-3 text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">Source Code</span>
+                </div>
+            `;
+        }
+
+        // Trigger filtering and sorting pipelines
+        function handleFilterAndSort() {
+            const query = document.getElementById('repo-search').value.toLowerCase().trim();
+            const sortVal = document.getElementById('repo-sort').value;
+
+            // 1. Process Filter (Language and Search queries)
+            filteredRepositories = originalRepositories.filter(repo => {
+                const matchesLang = (activeLanguageFilter === 'All' || repo.language === activeLanguageFilter);
+                const matchesSearch = (repo.name.toLowerCase().includes(query) || (repo.description && repo.description.toLowerCase().includes(query)));
+                return matchesLang && matchesSearch;
+            });
+
+            // 2. Process Sorting routines
+            if (sortVal === 'stars') {
+                filteredRepositories.sort((a, b) => b.stargazers_count - a.stargazers_count);
+            } else if (sortVal === 'updated') {
+                filteredRepositories.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+            } else if (sortVal === 'name') {
+                filteredRepositories.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortVal === 'size') {
+                filteredRepositories.sort((a, b) => b.size - a.size);
+            }
+
+            // Update visible badge number count
+            document.getElementById('gallery-count').textContent = filteredRepositories.length;
+
+            // Display result
+            renderGalleryGrid();
+        }
+
+        // Render project elements onto responsive cards with visual cover images
+        function renderGalleryGrid() {
+            if (filteredRepositories.length === 0) {
+                grid.classList.add('hidden');
+                showEmptyState(true);
+                return;
+            }
+
+            showEmptyState(false);
+            grid.classList.remove('hidden');
+            grid.innerHTML = '';
+
+            filteredRepositories.forEach(repo => {
+                const color = languageColors[repo.language] || '#64748b';
+                const hasDesc = !!repo.description;
+                const displayDesc = hasDesc ? repo.description : 'สำรวจรายละเอียดโครงการและสัมผัสความตั้งใจของซอร์สโค้ดตัวเต็มผ่านการเช็คเอาท์ Repository นี้';
+                
+                // Formulate updated time format
+                const formattedDate = new Date(repo.updated_at).toLocaleDateString('th-TH', {
+                    day: 'numeric', month: 'short', year: 'numeric'
+                });
+
+                // Generate dynamic language image cover banner
+                const coverBanner = getLanguageBanner(repo.language);
+
+                const cardHTML = `
+                    <div class="group relative bg-brand-card hover:bg-brand-card/85 border border-slate-800 hover:border-cyan-500/40 rounded-2xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col overflow-hidden cursor-pointer shadow-lg hover:shadow-cyan-500/5"
+                         onclick="openInspector('${repo.name}')">
+                        <!-- Upper Border Accent Glow -->
+                        <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyan-500 to-violet-500 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
+                        
+                        <!-- NEW Visual Image Cover Section -->
+                        <div class="w-full">
+                            ${coverBanner}
+                        </div>
+
+                        <!-- Card Body Details -->
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <!-- Stars, Forks & Metadata -->
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="flex items-center gap-1.5 font-bold text-[10px] text-slate-500 uppercase tracking-widest">
+                                        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${color}"></span>
+                                        ${repo.language || 'Plain Text'}
+                                    </span>
+                                    <div class="flex items-center gap-2.5 text-xs text-slate-500">
+                                        ${repo.stargazers_count > 0 ? `
+                                            <span class="flex items-center gap-1 hover:text-amber-400">
+                                                <i class="fa-regular fa-star text-amber-500 text-[11px]"></i> ${repo.stargazers_count}
+                                            </span>` : ''}
+                                        ${repo.forks_count > 0 ? `
+                                            <span class="flex items-center gap-1 hover:text-blue-400">
+                                                <i class="fa-solid fa-code-fork text-blue-500 text-[11px]"></i> ${repo.forks_count}
+                                            </span>` : ''}
+                                    </div>
+                                </div>
+
+                                <!-- Project Name -->
+                                <h3 class="text-sm font-extrabold text-white group-hover:text-cyan-400 transition mb-2 truncate" title="${repo.name}">
+                                    ${repo.name}
+                                </h3>
+
+                                <!-- Project Description -->
+                                <p class="text-xs text-slate-400 leading-relaxed mb-6 line-clamp-2">
+                                    ${displayDesc}
+                                </p>
+                            </div>
+
+                            <!-- Card Footer metadata -->
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-800/50 text-[10px] text-slate-500">
+                                <span class="flex items-center gap-1">
+                                    <i class="fa-regular fa-clock text-[9px]"></i> อัปเดตเมื่อ: ${formattedDate}
+                                </span>
+                                <span class="text-cyan-500/70 group-hover:text-cyan-400 font-extrabold uppercase tracking-widest text-[9px] flex items-center gap-1 transition">
+                                    รายละเอียด <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        // Open detailed view dialog containing repository information
+        function openInspector(repoName) {
+            const repo = originalRepositories.find(r => r.name === repoName);
+            if (!repo) return;
+
+            // Reset AI pitch elements in modal
+            document.getElementById('ai-pitch-output').classList.add('hidden');
+            document.getElementById('ai-pitch-loader').classList.add('hidden');
+            document.getElementById('ai-pitch-btn').classList.remove('hidden');
+
+            // Language setup
+            const color = languageColors[repo.language] || '#64748b';
+            const langBadge = document.getElementById('modal-lang-badge');
+            langBadge.textContent = repo.language || 'PLAIN TEXT';
+            langBadge.style.backgroundColor = `${color}25`;
+            langBadge.style.borderColor = `${color}40`;
+            langBadge.style.color = color;
+
+            // Details setup
+            document.getElementById('modal-title').textContent = repo.name;
+            document.getElementById('modal-desc').textContent = repo.description || 'ไม่มีข้อมูลคําอธิบายเพิ่มเติมสำหรับโครงการจัดเก็บนี้';
+            
+            // Numerical statistics
+            document.getElementById('modal-stars').textContent = formatInt(repo.stargazers_count);
+            document.getElementById('modal-forks').textContent = formatInt(repo.forks_count);
+            document.getElementById('modal-watchers').textContent = formatInt(repo.watchers_count);
+            document.getElementById('modal-size').textContent = formatInt(repo.size);
+
+            // Tech specs setup
+            document.getElementById('modal-license').textContent = repo.license ? repo.license.name : 'Unlicensed';
+            document.getElementById('modal-branch').textContent = repo.default_branch || 'main';
+            
+            // Format dates
+            const created = new Date(repo.created_at).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+            const updated = new Date(repo.updated_at).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('modal-created').textContent = created;
+            document.getElementById('modal-updated').textContent = updated;
+
+            // External link button
+            document.getElementById('modal-github-link').href = repo.html_url;
+
+            // Trigger show modal HTML5 API
+            const inspector = document.getElementById('repo-inspector');
+            inspector.showModal();
+        }
+
+        // Close detailed view dialog
+        function closeInspector() {
+            document.getElementById('repo-inspector').close();
+        }
+
+        // Reset Filter settings
+        function resetFilters() {
+            document.getElementById('repo-search').value = '';
+            document.getElementById('repo-sort').value = 'stars';
+            activeLanguageFilter = 'All';
+            generateLanguageFilterButtons();
+            handleFilterAndSort();
+        }
+
+        // Clipboard Copy Portfolio Share Link function
+        function copyPortfolioLink() {
+            // Reconstruct absolute URL to view this user later
+            const url = window.location.href.split('?')[0];
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = url;
+            tempInput.select();
+            
+            try {
+                // Compatible copy command fallback
+                document.execCommand('copy');
+                triggerNotification('คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว!');
+            } catch (err) {
+                triggerNotification('ล้มเหลวในการคัดลอกลิงก์', 'error');
+            } finally {
+                tempInput.remove();
+            }
+        }
+
+        // Helper: Int formatter with commas
+        function formatInt(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\n))/g, ",");
+        }
+
+        // Show/Hide page loaders
+        function showLoader(visible) {
+            if (visible) {
+                loader.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                loader.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        // Show/Hide Empty Placeholder UI
+        function showEmptyState(visible) {
+            if (visible) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        // ==========================================
+        // ✨ GEMINI LLM API RETRY & RETRIEVE LOGIC ✨
+        // ==========================================
+
+        // Exponential backoff runner for API safety
+        async function fetchWithBackoff(url, options, maxRetries = 5) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return response;
+                    
+                    // Trigger retry on too many requests or typical network hiccups
+                    if (response.status === 429 || response.status >= 500) {
+                        throw new Error(`Server returned status: ${response.status}`);
+                    }
+                    return response; // Return bad request directly
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // ✨ 1. AI Portfolio Recruiter Analyst Service ✨
+        async function runAIProfileAnalysis() {
+            const analyzeBtn = document.getElementById('ai-analyze-btn');
+            const outputBox = document.getElementById('ai-analysis-output-box');
+            const analysisText = document.getElementById('ai-analysis-text');
+            const timestamp = document.getElementById('ai-timestamp');
+            
+            // Set Loading UI
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin mr-1.5"></i> กำลังวิเคราะห์...`;
+            outputBox.classList.remove('hidden');
+            analysisText.innerHTML = `
+                <div class="flex flex-col gap-2.5 py-4">
+                    <div class="h-3.5 bg-slate-800 rounded-md animate-pulse w-3/4"></div>
+                    <div class="h-3.5 bg-slate-800 rounded-md animate-pulse w-full"></div>
+                    <div class="h-3.5 bg-slate-800 rounded-md animate-pulse w-5/6"></div>
+                    <div class="h-3.5 bg-slate-800 rounded-md animate-pulse w-1/2"></div>
+                </div>`;
+            
+            // Collect developer parameters to send
+            const simplifiedRepos = originalRepositories.slice(0, 15).map(r => ({
+                name: r.name,
+                language: r.language || 'Unspecified',
+                stars: r.stargazers_count,
+                description: r.description || ''
+            }));
+
+            const devMeta = {
+                username: userProfileData.login,
+                name: userProfileData.name,
+                bio: userProfileData.bio,
+                followers: userProfileData.followers,
+                public_repos: userProfileData.public_repos,
+                starred_repos: simplifiedRepos
+            };
+
+            const systemPrompt = `You are an elite, tech-savvy IT recruiter and technical sourcer reviewing a developer's GitHub portfolio.
+Generate a professional, encouraging, and detailed review of the developer in the Thai language. 
+Focus on:
+1. **จุดเด่นหลัก (Key Tech Strengths)**: Analyze based on the profile, top languages, and repositories list.
+2. **โปรเจกต์ที่น่าสนใจ (Promising Works)**: Call out 1 or 2 specific repositories from the list.
+3. **คำแนะนำเส้นทางอาชีพ (Career Recommendation)**: Suggest matching engineering roles (e.g., Python Backend Dev, Frontend, Fullstack, AI Specialist) and areas to improve.
+
+FORMAT YOUR RESPONSE: Use clear, beautiful paragraphs. Highlight tech terms in code blocks (e.g., \`Python\`, \`Django\`). Keep the tone inspiring but realistic, highly professional. Do not write generic introductory/concluding filler; go straight to the analysis.`;
+
+            const userQuery = `นี่คือข้อมูลของนักพัฒนาชื่อ ${devMeta.name || devMeta.username} (@${devMeta.username}) 
+- Bio: ${devMeta.bio || 'ไม่มีข้อมูล'}
+- ยอดผู้ติดตาม: ${devMeta.followers}
+- จำนวนคลังโปรเจกต์ทั้งหมด: ${devMeta.public_repos}
+- รายชื่อคลังผลงานหลักบางส่วน: ${JSON.stringify(simplifiedRepos)}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const res = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                if (!res.ok) throw new Error('เกิดข้อผิดพลาดในการเชื่อมต่อกับ Gemini API');
+
+                const data = await res.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (!text) throw new Error('ไม่ได้รับข้อมูลวิเคราะห์จากปัญญาประดิษฐ์');
+
+                // Render dynamic Markdown format simple parser
+                aiAnalysisTextCache = text;
+                analysisText.innerHTML = parseSimpleMarkdown(text);
+                timestamp.textContent = `วิเคราะห์เมื่อ: ${new Date().toLocaleTimeString('th-TH')}`;
+                
+                // Enable audio playback
+                document.getElementById('ai-tts-btn').disabled = false;
+                triggerNotification('วิเคราะห์พอร์ตเรียบร้อยแล้ว! สามารถเปิดปุ่มเพื่อรับฟังเสียงสังเคราะห์ได้ ✨');
+            } catch (err) {
+                console.error(err);
+                analysisText.innerHTML = `
+                    <div class="text-red-400 flex items-center gap-2 py-4">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>ไม่สามารถดำเนินการวิเคราะห์ด้วยปัญญาประดิษฐ์ได้ในขณะนี้: ${err.message}</span>
+                    </div>`;
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-sm mr-1.5"></i> วิเคราะห์พอร์ตด้วย AI ✨`;
+            }
+        }
+
+        // ✨ 2. AI Project Elevator Pitch Generator Service ✨
+        async function generateAIPitch() {
+            const pitchBtn = document.getElementById('ai-pitch-btn');
+            const pitchOutput = document.getElementById('ai-pitch-output');
+            const pitchLoader = document.getElementById('ai-pitch-loader');
+
+            const repoName = document.getElementById('modal-title').textContent;
+            const repoDesc = document.getElementById('modal-desc').textContent;
+            const repoLang = document.getElementById('modal-lang-badge').textContent;
+
+            // Display loading
+            pitchBtn.classList.add('hidden');
+            pitchLoader.classList.remove('hidden');
+            pitchOutput.classList.add('hidden');
+
+            const systemPrompt = `You are an elite product marketing engineer. 
+Your task is to write a highly compelling, crisp, and interesting 3-sentence "Elevator Pitch" in the Thai language for this specific GitHub repository.
+Highlight what the project is, why it is unique, and its real-world benefit. 
+Ensure it sounds professional, energetic, and tech-savvy. Do not use generic filler words, go straight to the pitch.`;
+
+            const userQuery = `คลังโปรเจกต์: "${repoName}"
+ภาษาหลัก: "${repoLang}"
+คำอธิบายเดิม: "${repoDesc}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const res = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                if (!res.ok) throw new Error('Gemini API Connection failed');
+
+                const data = await res.json();
+                const pitchText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!pitchText) throw new Error('Empty response');
+
+                pitchOutput.innerHTML = `<i class="fa-solid fa-quote-left mr-1 text-cyan-500/40"></i> ${pitchText.trim()} <i class="fa-solid fa-quote-right ml-1 text-cyan-500/40"></i>`;
+                pitchOutput.classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                pitchOutput.textContent = 'ไม่สามารถสร้างคำโปรยได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง';
+                pitchOutput.classList.remove('hidden');
+            } finally {
+                pitchLoader.classList.add('hidden');
+            }
+        }
+
+        // ✨ 3. AI Text-to-Speech (TTS) Synthesis Service ✨
+        async function speakAIAnalysis() {
+            const ttsBtn = document.getElementById('ai-tts-btn');
+            const audioWrapper = document.getElementById('ai-audio-wrapper');
+            const player = document.getElementById('ai-audio-player');
+
+            if (isSpeaking) {
+                player.pause();
+                isSpeaking = false;
+                ttsBtn.innerHTML = `<i class="fa-solid fa-volume-high text-sm"></i> ฟังเสียงบรรยายด้วย AI ✨`;
+                return;
+            }
+
+            // If we have cached audio buffer, just play it
+            if (pcmAudioBuffer) {
+                player.play();
+                isSpeaking = true;
+                ttsBtn.innerHTML = `<i class="fa-solid fa-pause text-sm text-cyan-400"></i> หยุดฟังเสียงบรรยาย ✨`;
+                return;
+            }
+
+            // Generate clean text without Markdown tags for Speech synthesis
+            const cleanText = aiAnalysisTextCache
+                .replace(/[\*#_`]/g, '')
+                .slice(0, 800); // Limit to 800 chars for smooth speed rendering
+
+            ttsBtn.disabled = true;
+            ttsBtn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin mr-1.5"></i> กำลังสังเคราะห์เสียง...`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Say warmly in Thai: ${cleanText}` }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: {
+                                voiceName: "Aoede" // Premium expressive voice
+                            }
+                        }
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            try {
+                const res = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                if (!res.ok) throw new Error('เกิดข้อผิดพลาดในการสังเคราะห์เสียง');
+
+                const data = await res.json();
+                const base64Audio = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+
+                if (!base64Audio) throw new Error('ไม่ได้รับข้อมูลเสียงกลับมาจากเซิร์ฟเวอร์');
+
+                // Convert base64 to binary ArrayBuffer
+                const binaryString = atob(base64Audio);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+
+                // Convert RAW PCM16 24KHz Mono to standard WAV Blob
+                const wavBlob = pcmToWav(bytes.buffer, 24000);
+                const audioUrl = URL.createObjectURL(wavBlob);
+
+                player.src = audioUrl;
+                pcmAudioBuffer = audioUrl;
+
+                // Configure player events
+                player.onended = () => {
+                    isSpeaking = false;
+                    ttsBtn.innerHTML = `<i class="fa-solid fa-volume-high text-sm"></i> ฟังเสียงบรรยายด้วย AI ✨`;
+                };
+
+                player.play();
+                isSpeaking = true;
+                ttsBtn.disabled = false;
+                ttsBtn.innerHTML = `<i class="fa-solid fa-pause text-sm text-cyan-400"></i> หยุดฟังเสียงบรรยาย ✨`;
+                audioWrapper.classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                triggerNotification(`ล้มเหลวในการสังเคราะห์เสียง: ${err.message}`, 'error');
+                ttsBtn.disabled = false;
+                ttsBtn.innerHTML = `<i class="fa-solid fa-volume-high text-sm"></i> ฟังเสียงบรรยายด้วย AI ✨`;
+            }
+        }
+
+        // WAV Header construction for PCM-to-WAV conversion
+        function pcmToWav(pcmBuffer, sampleRate = 24000) {
+            const buffer = new ArrayBuffer(44 + pcmBuffer.byteLength);
+            const view = new DataView(buffer);
+
+            const writeString = (view, offset, string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + pcmBuffer.byteLength, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); // Raw integer PCM
+            view.setUint16(22, 1, true); // Mono Channel
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true); // Byte rate (SampleRate * ChannelCount * BytesPerSample)
+            view.setUint16(32, 2, true); // Block align
+            view.setUint16(34, 16, true); // 16 bits per sample
+            writeString(view, 36, 'data');
+            view.setUint32(40, pcmBuffer.byteLength, true);
+
+            // Copy PCM buffer payload
+            const pcmView = new Uint8Array(pcmBuffer);
+            const wavView = new Uint8Array(buffer, 44);
+            wavView.set(pcmView);
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        // Minimal markdown to html converter to support bullets and bold formats
+        function parseSimpleMarkdown(text) {
+            let html = text;
+            
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Inline Code
+            html = html.replace(/`(.*?)`/g, '<code class="bg-[#1a243d] border border-cyan-500/20 px-1.5 py-0.5 rounded text-cyan-400 font-mono text-[11px]">$1</code>');
+            // Newlines
+            html = html.replace(/\n/g, '<br>');
+            // Bullet lists
+            html = html.replace(/^[-\*]\s+(.*?)$/gm, '<li class="ml-4 list-disc text-slate-300">$1</li>');
+
+            return html;
+        }
+
+        // Register service worker for offline caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => {
+                    console.warn('Service worker registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

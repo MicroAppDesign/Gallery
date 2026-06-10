@@ -1,15 +1,30 @@
 {
-  "name": "key_generator_tools",
+  "name": "gallery",
   "version": "1.0.0",
-  "description": "Tools for generating secure keys with Tailwind CSS v4",
-  "main": "index.html",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "build": "tailwindcss -i input.css -o styles/output.css",
-    "dev": "tailwindcss -i input.css -o styles/output.css --watch"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "screenshot": "node screenshot.js"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.7",
-    "tailwindcss": "^4.1.7"
+    "framer-motion": "12.40.0",
+    "lucide-react": "^1.17.0",
+    "next": "16.2.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.7",
+    "playwright": "^1.60.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
