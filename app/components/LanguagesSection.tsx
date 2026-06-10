@@ -1,3 +1,5 @@
+import LanguageLogo from './LanguageLogo'
+
 type LanguageStat = {
   language: string;
   size: number;
@@ -8,109 +10,6 @@ type LanguagesSectionProps = {
   profileUrl: string;
   copyPortfolioLink: () => void;
   languageStats: LanguageStat[];
-};
-
-// Helper to get the correct Devicon icon name for a given GitHub language
-const getDeviconName = (language: string): string => {
-  const lowerLang = language.toLowerCase();
-
-  // Simple mappings from GitHub language names to Devicon icon names
-  const mappings: Record<string, string> = {
-    "html": "html5",
-    "css": "css3",
-    "scss": "sass",
-    "javascript": "javascript",
-    "typescript": "typescript",
-    "python": "python",
-    "php": "php",
-    "ruby": "ruby",
-    "java": "java",
-    "c++": "cplusplus",
-    "c": "c",
-    "c#": "csharp",
-    "go": "go",
-    "golang": "go",
-    "rust": "rust",
-    "swift": "swift",
-    "kotlin": "kotlin",
-    "dart": "dart",
-    "shell": "bash",
-    "bash": "bash",
-    "powershell": "powershell",
-    "batchfile": "windows8",
-    "dockerfile": "docker",
-    "makefile": "docker", // Fallback for Makefile
-    "json": "json",
-    "yaml": "yaml",
-    "xml": "xml",
-    "markdown": "markdown",
-    "graphql": "graphql",
-    "sql": "postgresql",
-    "postgresql": "postgresql",
-    "mysql": "mysql",
-    "mongodb": "mongodb",
-    "redis": "redis",
-    "vue": "vuejs",
-    "react": "react",
-    "next.js": "nextjs",
-    "node.js": "nodejs",
-    "express": "express",
-    "nestjs": "nestjs",
-    "flask": "flask",
-    "django": "django",
-    "spring": "spring",
-    "laravel": "laravel",
-    "symfony": "symfony",
-    "rails": "rails",
-    "ruby on rails": "rails",
-    "flutter": "flutter",
-    "svelte": "svelte",
-    "angular": "angularjs",
-    "git": "git",
-    "git hub actions": "github",
-    "aws": "amazonwebservices",
-    "azure": "azure",
-    "gcp": "googlecloud",
-    "vercel": "vercel",
-    "netlify": "netlify",
-    "heroku": "heroku",
-    "firebase": "firebase",
-    "supabase": "supabase",
-    "figma": "figma",
-    "adobe xd": "xd",
-    "photoshop": "photoshop",
-    "illustrator": "illustrator",
-    "blender": "blender",
-    "unity": "unity",
-    "unreal": "unreal",
-    "godot": "godot",
-  };
-
-  return mappings[lowerLang] || lowerLang;
-};
-
-const languageLogoMap: Record<string, string> = {
-  // Local files (prioritized first)
-  "HTML": "/assets/HTML5_logo_and_wordmark.svg",
-  "Python": "/assets/Python-logo-notext.svg",
-  "TypeScript": "/assets/Typescript_logo_2020.svg",
-  "JavaScript": "/assets/Unofficial_JavaScript_logo_2.svg",
-};
-
-// Helper to get logo with fallback
-const getLanguageLogo = (language: string | null): string | null => {
-  if (!language) return null;
-
-  // First check local files
-  if (languageLogoMap[language]) {
-    return languageLogoMap[language];
-  }
-
-  // Try Devicon CDN
-  const deviconName = getDeviconName(language);
-  const deviconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${deviconName}/${deviconName}-original.svg`;
-
-  return deviconUrl;
 };
 
 export default function LanguagesSection({ profileUrl, copyPortfolioLink, languageStats }: LanguagesSectionProps) {
@@ -126,20 +25,9 @@ export default function LanguagesSection({ profileUrl, copyPortfolioLink, langua
               <div className="text-center text-slate-500 text-xs py-8">ไม่มีข้อมูลสถิติภาษา</div>
             ) : (
               languageStats.map(({ language, percentage }) => {
-                const logoUrl = getLanguageLogo(language);
                 return (
                   <div key={language} className="flex items-center gap-3">
-                    {logoUrl && (
-                      <img
-                        src={logoUrl}
-                        alt={`${language} logo`}
-                        className="h-6 w-6 object-contain flex-shrink-0"
-                        onError={(e) => {
-                          // Hide image if it fails to load
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    )}
+                    <LanguageLogo language={language} className="h-6 w-6 object-contain flex-shrink-0" />
                     <div className="flex-1 space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-xs font-semibold text-slate-200">{language}</span>
