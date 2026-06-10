@@ -75,7 +75,7 @@ async function createTemplateInfo(filename: string): Promise<TemplateInfo> {
     imageSrc: `/${filename}`,
     paymentLink: content.paymentLink ?? "https://microtronic-thailand.github.io/micro-payment/",
     vercelLink: content.vercelLink ?? `https://${slug}.vercel.app/`,
-    githubLink: content.githubLink ?? `https://github.com/Ex2-Axon/${slug}`,
+    githubLink: content.githubLink ?? `https://github.com/MicroAppDesign/${slug}`,
   };
 }
 
