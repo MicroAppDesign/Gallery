@@ -1,3 +1,5 @@
+import LanguageLogo from './LanguageLogo'
+
 type GitHubRepo = {
   id: number;
   name: string;
@@ -24,13 +26,6 @@ function formatRepoDate(updatedAt: string) {
     day: "numeric",
   });
 }
-
-const languageLogoMap: Record<string, string> = {
-  "HTML": "/assets/HTML5_logo_and_wordmark.svg",
-  "Python": "/assets/Python-logo-notext.svg",
-  "TypeScript": "/assets/Typescript_logo_2020.svg",
-  "JavaScript": "/assets/Unofficial_JavaScript_logo_2.svg",
-};
 
 export default function GalleryGridSection({
   repos,
@@ -64,7 +59,7 @@ export default function GalleryGridSection({
         </div>
       ) : repos.length === 0 && !loading ? (
         <div className="rounded-3xl border border-border/70 bg-background/80 p-8 text-center text-slate-500">
-          <p className="text-sm font-medium">ยังไม่มีคลังข้อมูลที่ตรงตามเงื่อนไข</p>      
+          <p className="text-sm font-medium">ยังไม่มีคลังข้อมูลที่ตรงตามเงื่อนไข</p>
           <p className="text-xs mt-2">ปรับคำค้นหรือเลือกภาษาอื่นเพื่อค้นหา repository ของ MicroAppDesign</p>
           <button
             type="button"
@@ -77,20 +72,14 @@ export default function GalleryGridSection({
       ) : (
         <div id="gallery-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300">
           {repos.map((repo) => {
-            const logoUrl = repo.language ? languageLogoMap[repo.language] : null;
-            
             return (
             <article key={repo.id} className="rounded-3xl border border-border/70 bg-background/80 p-6 hover:border-primary/40 transition">
-              {logoUrl && (
+              {repo.language && (
                 <div className="mb-4 flex items-center justify-center">
-                  <img 
-                    src={logoUrl} 
-                    alt={`${repo.language} logo`}
-                    className="h-16 w-16 object-contain"
-                  />
+                  <LanguageLogo language={repo.language} className="h-16 w-16 object-contain" />
                 </div>
               )}
-              <div className="flex items-center justify-between gap-3 mb-4">    
+              <div className="flex items-center justify-between gap-3 mb-4">
                 <h3 className="text-base font-bold text-white truncate">{repo.name}</h3>
                 <a
                   href={repo.html_url}
