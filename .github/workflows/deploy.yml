@@ -55,3 +55,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Notify Discord
+        if: success() # ใช้ always() ถ้าต้องการให้ทำงานไม่ว่าขั้นตอนก่อนหน้าจะสำเร็จหรือล้มเหลว
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{"content": "🚀 Deploy to GitHub Pages completed successfully!"}' \
+          $WEBHOOK_URL
