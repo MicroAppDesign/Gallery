@@ -60,3 +60,6 @@ github_push.py
 github_sync.py 
 github_ui.py 
 github_update.py
+setup_and_run.py
+update_repos.py
+temp-links.txt
