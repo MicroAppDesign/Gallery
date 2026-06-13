@@ -1,7 +1,7 @@
 const { chromium } = require("playwright");
 const path = require("path");
 
-const url = process.argv[2] || process.env.SCREENSHOT_URL || "https://x-template-next16-000.vercel.app";
+const url = process.argv[2] || process.env.SCREENSHOT_URL || "https://Neon13-Gallery.vercel.app";
 const output = process.argv[3] || process.env.SCREENSHOT_OUTPUT || "screenshot.png";
 const fullPage = process.env.SCREENSHOT_FULL_PAGE !== "false";
 
