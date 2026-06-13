@@ -61,11 +61,11 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
         run: >
-        curl -H "Content-Type: application/json" -d '{
-          "content": "🚀 **Deploy Completed!**",
-          "embeds": [{
-            "title": "Commit: ${{ github.sha }}",
-            "description": "สถานะ: **${{ job.status }}**\n\n👤 ผู้ทำ: ${{ github.actor }}\n🔗 [ดูหน้าเว็บที่นี่](https://microappdesign.github.io/Neon13-Gallery/)",
-            "color": 3066993
-          }]
-        }' $WEBHOOK_URL
+          curl -H "Content-Type: application/json" -d '{
+            "content": "🚀 **Deploy Completed!**",
+            "embeds": [{
+              "title": "Commit: ${{ github.sha }}",
+              "description": "สถานะ: **${{ job.status }}**\n\n👤 ผู้ทำ: ${{ github.actor }}\n🔗 [ดูหน้าเว็บที่นี่](https://microappdesign.github.io/Neon13-Gallery/)",
+              "color": 3066993
+            }]
+          }' $WEBHOOK_URL
